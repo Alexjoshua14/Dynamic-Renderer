@@ -25,4 +25,32 @@ public class Vector3 {
     public float getZ() {
         return this.z;
     }
+
+    public Vector3 times(float s) {
+        return new Vector3 (
+            x * s,
+            y * s,
+            z * s
+        );
+    }
+
+    public Vector3 plus(Vector3 vector) {
+        return new Vector3 (
+            x + vector.x,
+            y + vector.y,
+            z + vector.z
+        );
+    }
+
+    public Vector3 minus(Vector3 vector) {
+        return new Vector3 (
+            x - vector.x,
+            y - vector.y,
+            z - vector.z
+        );
+    }
+
+    public static Vector3 lerp(Vector3 start, Vector3 end, float t) {
+        return start.times(1 - t).plus(end.times(t));
+    }
 }

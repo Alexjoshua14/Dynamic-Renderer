@@ -17,12 +17,12 @@ public class Image implements Closeable {
     }
 
     public void plotPixel(int x, int y, ImageColor color) {
+        int r = (int) Math.max(0, Math.min(255, color.getR()));
+        int g = (int) Math.max(0, Math.min(255, color.getG()));
+        int b = (int) Math.max(0, Math.min(255, color.getB()));
+
         graphics.setPaint(
-                new Color(
-                        color.getR(),
-                        color.getG(),
-                        color.getB()
-                )
+                new Color(r, g, b)
         );
 
         graphics.fillRect(x, y, 1, 1);

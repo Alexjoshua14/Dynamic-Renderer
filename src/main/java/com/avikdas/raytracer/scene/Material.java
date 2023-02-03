@@ -23,7 +23,7 @@ public class Material {
     }
 
     public Color getKDiffuset() {
-        return this.kDiffuset;   
+        return this.kDiffuse;   
     }
 
     public Color getKSpecular() {
