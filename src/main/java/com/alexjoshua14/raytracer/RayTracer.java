@@ -1,8 +1,8 @@
-package com.avikdas.raytracer;
+package com.alexjoshua14.raytracer;
 
-import com.avikdas.raytracer.image.Image;
-import com.avikdas.raytracer.image.ImageColor;
-import com.avikdas.raytracer.scene.*;
+import com.alexjoshua14.raytracer.image.Image;
+import com.alexjoshua14.raytracer.image.ImageColor;
+import com.alexjoshua14.raytracer.scene.*;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -93,8 +93,8 @@ public class RayTracer {
     );
 
     public static void main(String [] args) throws IOException {
-        com.avikdas.raytracer.tracer.RayTracer tracer =
-                new com.avikdas.raytracer.tracer.RayTracer(SCENE, W, H);
+        com.alexjoshua14.raytracer.tracer.RayTracer tracer =
+                new com.alexjoshua14.raytracer.tracer.RayTracer(SCENE, W, H);
 
         try (Image image = new Image(W, H)) {
             for (int x = 0; x < W; x++)

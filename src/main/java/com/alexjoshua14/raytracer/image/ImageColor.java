@@ -1,4 +1,4 @@
-package com.avikdas.raytracer.image;
+package com.alexjoshua14.raytracer.image;
 
 import lombok.Value;
 

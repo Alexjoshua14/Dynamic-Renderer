@@ -1,7 +1,7 @@
-package com.avikdas.raytracer.tracer;
+package com.alexjoshua14.raytracer.tracer;
 
-import com.avikdas.raytracer.image.*;
-import com.avikdas.raytracer.scene.*;
+import com.alexjoshua14.raytracer.image.*;
+import com.alexjoshua14.raytracer.scene.*;
 import java.lang.Math;
 
 public class RayTracer {

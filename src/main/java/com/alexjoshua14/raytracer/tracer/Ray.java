@@ -1,6 +1,6 @@
-package com.avikdas.raytracer.tracer;
+package com.alexjoshua14.raytracer.tracer;
 
-import com.avikdas.raytracer.scene.Vector3;
+import com.alexjoshua14.raytracer.scene.Vector3;
 import lombok.Value;
 
 @Value

@@ -1,4 +1,4 @@
-package com.avikdas.raytracer.scene;
+package com.alexjoshua14.raytracer.scene;
 
 import lombok.Value;
 
