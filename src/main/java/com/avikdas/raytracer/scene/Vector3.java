@@ -1,6 +1,7 @@
 package com.avikdas.raytracer.scene;
 
 import lombok.Value;
+import java.lang.Math;
 
 @Value
 public class Vector3 {
@@ -48,6 +49,14 @@ public class Vector3 {
             y - vector.y,
             z - vector.z
         );
+    }
+
+    public float dot(Vector3 vector) {
+        return (x * vector.x) + (y * vector.y) + (z * vector.z);
+    }
+
+    public double magnitude() {
+        return Math.sqrt((x * x) + (y * y) + (z * z)); 
     }
 
     public static Vector3 lerp(Vector3 start, Vector3 end, float t) {

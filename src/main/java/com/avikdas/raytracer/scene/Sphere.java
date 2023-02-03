@@ -25,4 +25,8 @@ public class Sphere implements SceneObject {
     public Material getMaterial() {
         return this.material;
     }
+
+    public Color getColor() {
+        return this.material.getKAmbient();
+    }
 }
