@@ -88,11 +88,8 @@ public class RayTracer {
 
         if (obj instanceof Sphere) {
             Sphere sphere = (Sphere) obj;
-        
             Vector3 sNormal = sphere.surfaceNormal(ray.at(t));
-
             Material m = sphere.getMaterial();
-
             Color phongIllumination = m.getKAmbient().times(scene.getAmbientLight());
             
             Color lightContributions = scene
@@ -120,7 +117,9 @@ public class RayTracer {
                     Color.BLACK, (prev, additionalLight) -> prev.plus(additionalLight)
                 );
                 
-            return lightContributions;
+            Color ambient = m.getKAmbient().times(scene.getAmbientLight());
+
+            return ambient.plus(lightContributions);
         }
         
 
