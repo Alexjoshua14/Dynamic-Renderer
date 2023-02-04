@@ -3,6 +3,7 @@ package com.alexjoshua14.raytracer.tracer;
 import com.alexjoshua14.raytracer.image.*;
 import com.alexjoshua14.raytracer.scene.*;
 import java.lang.Math;
+import java.util.Optional;
 
 public class RayTracer {
     Scene scene;
@@ -16,35 +17,16 @@ public class RayTracer {
     }
 
     public Color tracedValueAtPixel(int x, int y) {
-        /* Get the ray from the camera to the Image Plane */
         float xt = ((float) x) / w;
         float yt = ((float) y) / h;
-
-        ImagePlane ip = scene.getImagePlane();
-
-        Vector3 top = Vector3.lerp(ip.getTopLeft(), ip.getTopRight(), xt);
-        Vector3 bottom = Vector3.lerp(ip.getBottomLeft(), ip.getBottomRight(), xt);
-
-        Vector3 p =  Vector3.lerp(top, bottom, yt);
-
-        Ray ray = new Ray(p, p.minus(scene.getCamera()));
+        Ray ray = getIntersectionPoint(xt, yt);
         
         /* Now see if the ray hits any object */
-        float minT = -1f;
-        SceneObject closestObj = null;
-        for (SceneObject obj : scene.getObjects()) {
-            float t = getT(ray, obj);
-            if (t >= 0) {
-                if (minT == -1f || t < minT) {
-                    minT = t;
-                    closestObj = obj;
-                }
-            }
-        }
+        Optional<RayCastHit> closestObj = getClosestObjectInPath(ray);
 
         // Ray intersected a scene object
-        if (closestObj != null) {
-            return getColorAtPoint(ray, minT, closestObj).clamped();
+        if (closestObj.isPresent()) {
+            return getColorAtPoint(ray, closestObj.get()).clamped();
         }
 
         // Ray did not intersect any scene object
@@ -55,7 +37,19 @@ public class RayTracer {
         );
     }
 
-    private float getT(Ray ray, SceneObject obj) {
+    /* Get the ray from the camera to the Image Plane */
+    private Ray getIntersectionPoint(float xt, float yt) {
+         ImagePlane ip = scene.getImagePlane();
+ 
+         Vector3 top = Vector3.lerp(ip.getTopLeft(), ip.getTopRight(), xt);
+         Vector3 bottom = Vector3.lerp(ip.getBottomLeft(), ip.getBottomRight(), xt);
+
+         Vector3 p = Vector3.lerp(top, bottom, yt);
+
+        return new Ray(p, p.minus(scene.getCamera()));
+    }
+
+    private Optional<Float> getT(Ray ray, SceneObject obj) {
         
         if (obj instanceof Sphere) {
             Sphere sphere = (Sphere) obj;
@@ -68,26 +62,73 @@ public class RayTracer {
 
             double disc = Math.pow(b, 2) - ( 4 * a * c);
 
-            if (disc >= 0) {
-                float t1 = (float) ((disc - b) / (2 * a));
-                float t2 = (float) (((disc * -1) - b) / (2 * a));
-                
-                if ( t1 > 0 && t2 > 0) {
-                    return Math.min(t1, t2);
-                } else if (t1 > 0) {
-                    return t1;
-                } else if (t2 > 0) {
-                    return t2;
-                }
+            if (disc < 0) { 
+                return Optional.empty();
             }
+
+            double sqrt = Math.sqrt(disc);
+
+            float t1 = (float) ((- b + sqrt) / (2 * a));
+            float t2 = (float) ((-b - sqrt) / (2 * a));
+            
+            //QUESTION: What happens if we're in the object, i.e., t1/t2 < 0 and t2/t1 > 0
+            float minT = Math.min(t1, t2);
+
+            return minT > 0 ?
+                Optional.of(minT) :
+                Optional.empty();
+            
         }
-        return -1f;
+
+        return Optional.empty();
     }
 
-    private Color getColorAtPoint(Ray ray, float t, SceneObject obj) {
+    private Optional<RayCastHit> getClosestObjectInPath(Ray ray) {
 
-        if (obj instanceof Sphere) {
-            Sphere sphere = (Sphere) obj;
+        Optional<RayCastHit> closestObj = scene.getObjects()
+            .stream()
+            .map(
+                obj ->
+                    getT(ray, obj)
+                    .map( t -> new RayCastHit(
+                        t,
+                        obj,
+                        obj.surfaceNormal(ray.at(t)))
+                    )
+                )
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .min((h0, h1) -> (int) Math.signum(h0.getT() - h1.getT()))
+            .map(hit -> Optional.of(hit))
+            .orElse(Optional.empty());
+
+        // for (SceneObject obj : scene.getObjects()) {
+        //     float t = getT(ray, obj);
+        //     if (t >= 0) {
+        //         if (closestObj == null) {
+        //             closestObj = new RayCastHit(t, obj);
+        //         } else if (t < closestObj.getT()) {
+        //             closestObj.setT(t);
+        //             closestObj.setObj(obj);
+        //         }
+        //     }
+        // }
+        
+        //Set normal component of closest object
+        // if (closestObj != null) {
+        //     closestObj.setNormal(obj.normalAt(ray.at(obj.getT())));
+        // }
+
+
+        return closestObj;
+    }
+
+    private Color getColorAtPoint(Ray ray, RayCastHit hit) {
+
+        if (hit.getObject() instanceof Sphere) {
+            Sphere sphere = (Sphere) hit.getObject();
+            float t = hit.getT();
+
             Vector3 sNormal = sphere.surfaceNormal(ray.at(t));
             Material m = sphere.getMaterial();
             Color phongIllumination = m.getKAmbient().times(scene.getAmbientLight());
