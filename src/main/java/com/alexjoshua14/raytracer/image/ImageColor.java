@@ -6,6 +6,7 @@ import lombok.Value;
 public class ImageColor {
     public static final int MAX = 0xff;
 
+    /* r, g, and b are values between 0 and 255 inclusive */
     int r;
     int g;
     int b;

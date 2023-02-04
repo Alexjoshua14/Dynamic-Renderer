@@ -7,6 +7,7 @@ public class Color {
     public static final float MAX = 1;
     public static final Color BLACK = new Color(0, 0, 0);
 
+    /* r, g, and b are percentages that should stay between 0 and 1 inclusive */
     float r;
     float g;
     float b;
