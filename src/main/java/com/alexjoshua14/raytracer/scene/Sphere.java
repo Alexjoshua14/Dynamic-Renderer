@@ -29,4 +29,8 @@ public class Sphere implements SceneObject {
     public Color getColor() {
         return this.material.getKAmbient();
     }
+
+    public Vector3 surfaceNormal(Vector3 point) {
+        return point.minus(center).normalized();
+    }
 }

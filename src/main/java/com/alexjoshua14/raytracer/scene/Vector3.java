@@ -56,7 +56,15 @@ public class Vector3 {
     }
 
     public double magnitude() {
-        return Math.sqrt((x * x) + (y * y) + (z * z)); 
+        return Math.sqrt(this.dot(this)); 
+    }
+
+    public Vector3 normalized() {
+        return this.times((float) (1 / magnitude()));
+    }
+
+    public Vector3 inverted() {
+        return this.times(-1);
     }
 
     public static Vector3 lerp(Vector3 start, Vector3 end, float t) {

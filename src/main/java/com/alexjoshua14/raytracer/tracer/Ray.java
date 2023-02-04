@@ -20,4 +20,8 @@ public class Ray {
     public Vector3 getDirection() {
         return this.direction;
     }
+
+    public Vector3 at(float t) {
+        return origin.plus(direction.times(t));
+    }
 }

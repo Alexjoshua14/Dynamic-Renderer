@@ -25,4 +25,8 @@ public class Light {
     public Color getIntensityDiffuse() {
         return this.intensityDiffuse;   
     }
+
+    public Vector3 lightVector(Vector3 intersectionPoint) {
+        return position.minus(intersectionPoint).normalized();
+    }
 }

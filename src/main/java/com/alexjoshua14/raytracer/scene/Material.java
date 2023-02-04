@@ -5,7 +5,7 @@ import lombok.Value;
 @Value
 public class Material {
     Color kAmbient;
-    Color kDiffuse;
+    Color kDiffuse; 
     Color kSpecular;
     Color kReflection;
     int alpha;
@@ -22,7 +22,7 @@ public class Material {
         return this.kAmbient;   
     }
 
-    public Color getKDiffuset() {
+    public Color getKDiffuse() {
         return this.kDiffuse;   
     }
 

@@ -44,7 +44,7 @@ public class RayTracer {
 
         // Ray intersected a scene object
         if (closestObj != null) {
-            return closestObj.getColor();
+            return getColorAtPoint(ray, minT, closestObj).clamped();
         }
 
         // Ray did not intersect any scene object
@@ -82,5 +82,48 @@ public class RayTracer {
             }
         }
         return -1f;
+    }
+
+    private Color getColorAtPoint(Ray ray, float t, SceneObject obj) {
+
+        if (obj instanceof Sphere) {
+            Sphere sphere = (Sphere) obj;
+        
+            Vector3 sNormal = sphere.surfaceNormal(ray.at(t));
+
+            Material m = sphere.getMaterial();
+
+            Color phongIllumination = m.getKAmbient().times(scene.getAmbientLight());
+            
+            Color lightContributions = scene
+                .getLights()
+                .stream()
+                .filter(light -> 
+                    sNormal.dot(light.lightVector(ray.at(t))) > 0)
+                .map(light -> {
+                    Vector3 l = light.lightVector(ray.at(t));
+                    Vector3 r = sNormal.times(sNormal.dot(l) * 2).minus(l);
+                    Vector3 view = ray.getDirection().inverted().normalized();
+
+                    Color diffuse = light.getIntensityDiffuse()
+                                    .times(m.getKDiffuse())
+                                    .times(l.dot(sNormal));
+
+                    Color specular = m.getKSpecular()
+                                    .times(light.getIntensitySpecular())
+                                    .times((float) Math.pow(
+                                        view.dot(r), m.getAlpha()));
+                    
+                    return diffuse.plus(specular);
+                })
+                .reduce(
+                    Color.BLACK, (prev, additionalLight) -> prev.plus(additionalLight)
+                );
+                
+            return lightContributions;
+        }
+        
+
+        return null;
     }
 }
