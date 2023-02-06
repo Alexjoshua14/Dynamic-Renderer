@@ -6,11 +6,11 @@ import java.util.List;
 
 @Value
 public class Scene {
-    Vector3 camera;
-    ImagePlane ImagePlane;
-    Color ambientLight;
-    List<Light> lights;
-    List<SceneObject> objects;
+    private Vector3 camera;
+    private ImagePlane ImagePlane;
+    private Color ambientLight;
+    private List<Light> lights;
+    private List<SceneObject> objects;
 
     public Scene(Vector3 camera, ImagePlane ImagePlane, Color ambientLight, List<Light> lights, List<SceneObject> objects) {
         this.camera = camera;

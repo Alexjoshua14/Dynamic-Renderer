@@ -4,11 +4,11 @@ import lombok.Value;
 
 @Value
 public class Material {
-    Color kAmbient;
-    Color kDiffuse; 
-    Color kSpecular;
-    Color kReflection;
-    int alpha;
+    private Color kAmbient;
+    private Color kDiffuse; 
+    private Color kSpecular;
+    private Color kReflection;
+    private int alpha;
 
     public Material(Color kAmbient, Color kDiffuse, Color kSpecular, Color kReflection, int alpha)  {
         this.kAmbient = kAmbient;

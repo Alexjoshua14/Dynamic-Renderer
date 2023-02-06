@@ -7,9 +7,9 @@ import lombok.Value;
 
 @Value
 public class Sphere implements SceneObject {
-    Vector3 center;
-    float radius;
-    Material material;
+    private Vector3 center;
+    private float radius;
+    private Material material;
 
     public Sphere(Vector3 center, float radius, Material material) {
         this.center = center;

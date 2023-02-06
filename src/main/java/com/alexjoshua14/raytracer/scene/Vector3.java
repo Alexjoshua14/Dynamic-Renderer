@@ -5,9 +5,9 @@ import java.lang.Math;
 
 @Value
 public class Vector3 {
-    float x;
-    float y;
-    float z;
+    private float x;
+    private float y;
+    private float z;
 
     public Vector3(float x, float y, float z) {
         this.x = x;

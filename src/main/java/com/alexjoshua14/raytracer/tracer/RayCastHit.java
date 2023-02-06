@@ -3,9 +3,9 @@ package com.alexjoshua14.raytracer.tracer;
 import com.alexjoshua14.raytracer.scene.*;
 
 public class RayCastHit {
-    float t;
-    SceneObject obj;
-    Vector3 normal;
+    private float t;
+    private SceneObject obj;
+    private Vector3 normal;
 
     public RayCastHit(float t, SceneObject obj) {
         this.t = t;

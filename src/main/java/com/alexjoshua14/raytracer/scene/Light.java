@@ -4,9 +4,9 @@ import lombok.Value;
 
 @Value
 public class Light {
-    Vector3 position;
-    Color intensitySpecular;
-    Color intensityDiffuse;
+    private Vector3 position;
+    private Color intensitySpecular;
+    private Color intensityDiffuse;
 
     public Light(Vector3 position, Color intensitySpecular, Color intensityDiffuse) {
         this.position = position;
