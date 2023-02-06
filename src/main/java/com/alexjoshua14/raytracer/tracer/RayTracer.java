@@ -94,6 +94,8 @@ public class RayTracer {
             .stream()
             .filter(light -> 
                 sNormal.dot(light.lightVector(ray.at(t))) > 0)
+            .filter(light ->
+                !isShadowed(obj, ray.at(hit.getT()), light))
             .map(light -> {
                 Vector3 l = light.lightVector(ray.at(t));
                 Vector3 r = sNormal.times(sNormal.dot(l) * 2).minus(l);
@@ -107,7 +109,7 @@ public class RayTracer {
                                 .times(light.getIntensitySpecular())
                                 .times((float) Math.pow(
                                     view.dot(r), m.getAlpha()));
-                
+
                 return diffuse.plus(specular);
             })
             .reduce(
@@ -117,5 +119,24 @@ public class RayTracer {
         Color ambient = m.getKAmbient().times(scene.getAmbientLight());
 
         return ambient.plus(lightContributions);
+    }
+
+    /* Determine if any other sceneObject is in the path between the current object and 
+     * the specified light source.
+     */
+    private boolean isShadowed(SceneObject obj, Vector3 point, Light light) {
+        //If another object is in the path between the rayToLight and the object
+        //return true
+        
+        Vector3 direction = light.getPosition().minus(point);
+        Ray shadowRay = new Ray(point, direction);
+
+        return scene.getObjects()
+            .stream()
+            .filter(otherObjects -> otherObjects != obj)
+            .map(otherObjects -> otherObjects.getT(shadowRay))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .anyMatch(t -> t <= 1);
     }
 }

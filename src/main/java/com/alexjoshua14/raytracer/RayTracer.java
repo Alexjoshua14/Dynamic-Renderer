@@ -68,7 +68,18 @@ public class RayTracer {
                             )
                     ),
                     new Sphere(
-                            new Vector3(0, 0.7f, -0.8f),
+                            new Vector3(1.45f, -0.3f, -0.4f),
+                            0.4f,
+                            new Material(
+                                    new Color(0.1f, 0.1f, 0.2f),
+                                    new Color(0.5f, 0.5f, 0.9f),
+                                    new Color(0.7f, 0.7f, 0.7f),
+                                    new Color(0.2f, 0.3f, 0.5f),
+                                    50
+                            )
+                    ),
+                    new Sphere(
+                            new Vector3(0, 0.7f, -1.2f),
                             0.2f,
                             new Material(
                                     new Color(0.1f, 0.1f, 0.2f),
@@ -81,6 +92,17 @@ public class RayTracer {
                     new Sphere(
                             new Vector3(0, -0.7f, -0.8f),
                             0.2f,
+                            new Material(
+                                    new Color(0.1f, 0.1f, 0.2f),
+                                    new Color(0.9f, 0.5f, 0.9f),
+                                    new Color(0.7f, 0.7f, 0.7f),
+                                    new Color(0.5f, 0.2f, 0.5f),
+                                    50
+                            )
+                    ),
+                    new Sphere(
+                            new Vector3(-2.4f, -.6f, -4f),
+                            1f,
                             new Material(
                                     new Color(0.1f, 0.1f, 0.2f),
                                     new Color(0.9f, 0.5f, 0.9f),
