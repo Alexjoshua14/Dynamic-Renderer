@@ -19,36 +19,39 @@ public class Color {
     }
 
     public float getR() {
-        return this.r;
+        return r;
     }
 
     public float getG() {
-        return this.g;
+        return g;
     }
 
     public float getB() {
-        return this.b;
+        return b;
     }
 
-    public Color times(Color color) {
-        return new Color(r * color.r, g * color.g, b * color.g);
+    public Color times(Color otherColor) {
+        float newR = r * otherColor.getR();
+        float newG = g * otherColor.getG();
+        float newB = b * otherColor.getB();
+        return new Color(newR, newG, newB);
     }
 
     public Color times(float num) {
         return new Color(r * num, g * num, b * num);
     }
 
-    public Color plus(Color color) {
-        float newR = r + color.r;
-        float newG = g + color.g;
-        float newB = b + color.b;
+    public Color plus(Color otherColor) {
+        float newR = r + otherColor.getR();
+        float newG = g + otherColor.getG();
+        float newB = b + otherColor.getB();
         return new Color(newR, newG, newB);
     }
 
-    public Color minus(Color color) {
-        float newR = r - color.r;
-        float newG = g - color.g;
-        float newB = b - color.b;
+    public Color minus(Color otherColor) {
+        float newR = r - otherColor.getR();
+        float newG = g - otherColor.getG();
+        float newB = b - otherColor.getB();
         return new Color(newR, newG, newB);
     }
 

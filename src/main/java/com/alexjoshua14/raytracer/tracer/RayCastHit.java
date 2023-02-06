@@ -7,11 +7,6 @@ public class RayCastHit {
     private SceneObject obj;
     private Vector3 normal;
 
-    public RayCastHit(float t, SceneObject obj) {
-        this.t = t;
-        this.obj = obj;
-    }
-
     public RayCastHit(float t, SceneObject obj, Vector3 normal) {
         this.t = t;
         this.obj = obj;

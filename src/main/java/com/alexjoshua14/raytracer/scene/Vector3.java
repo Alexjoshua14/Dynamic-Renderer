@@ -37,22 +37,22 @@ public class Vector3 {
 
     public Vector3 plus(Vector3 vector) {
         return new Vector3 (
-            x + vector.x,
-            y + vector.y,
-            z + vector.z
+            x + vector.getX(),
+            y + vector.getY(),
+            z + vector.getZ()
         );
     }
 
     public Vector3 minus(Vector3 vector) {
         return new Vector3 (
-            x - vector.x,
-            y - vector.y,
-            z - vector.z
+            x - vector.getX(),
+            y - vector.getY(),
+            z - vector.getZ()
         );
     }
 
     public float dot(Vector3 vector) {
-        return (x * vector.x) + (y * vector.y) + (z * vector.z);
+        return (x * vector.getX()) + (y * vector.getY()) + (z * vector.getZ());
     }
 
     public double magnitude() {

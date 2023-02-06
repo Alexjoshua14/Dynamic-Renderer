@@ -6,6 +6,7 @@ import java.lang.Math;
 import java.util.Optional;
 
 public class RayTracer {
+    private static final int RECURSION_DEPTH = 5;
     Scene scene;
     int w;
     int h;
@@ -24,26 +25,16 @@ public class RayTracer {
      *      directly at the image plane
      * 3. Determine what color the spot on the object / image plane is according to
      *      the object's visual characteristics and lights present
+     * 
+     * Steps 2 & 3 are completed in colorFromAnyObjectHit
      */
     public Color tracedValueAtPixel(int x, int y) {
         float xt = ((float) x) / w;
         float yt = ((float) y) / h;
         Ray ray = getIntersectionPoint(xt, yt);
-        
-        /* Now see if the ray hits any object */
-        Optional<RayCastHit> closestObj = getClosestObjectInPath(ray);
-
-        // Ray intersected a scene object
-        if (closestObj.isPresent()) {
-            return getColorAtPoint(ray, closestObj.get()).clamped();
-        }
-
-        // Ray did not intersect any scene object
-        return new Color(
-            (ray.getDirection().getX() + 1.92f) / 3.84f,
-            (ray.getDirection().getY() + 1.08f) / 2.16f,
-            ray.getDirection().getZ() / -4
-        );
+       
+        return colorFromAnyObjectHit(ray, RECURSION_DEPTH);
+        // return recursiveTracedValueAtPixel(ray, RECURSION_DEPTH);
     }
 
     /* Get the ray from the camera to the Image Plane */
@@ -58,30 +49,66 @@ public class RayTracer {
         return new Ray(p, p.minus(scene.getCamera()));
     }
 
-    /* Get the closest object in the path of the ray */
-    private Optional<RayCastHit> getClosestObjectInPath(Ray ray) {
-       return scene.getObjects()
-            .stream()
-            .map(
-                obj -> 
-                    obj.getT(ray)
-                    .map( t -> new RayCastHit(
-                        t,
-                        obj,
-                        obj.surfaceNormal(ray.at(t)))
-                    )
-                )
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .min((h0, h1) -> (int) Math.signum(h0.getT() - h1.getT()))
-            .map(hit -> Optional.of(hit))
-            .orElse(Optional.empty());
-    }
+    /* Get the color for a specific pixel based on ambient lighting, direct lighting, shadows, and reflections
+     * 
+     * Recursion is used to obtain the color contribution from reflections off of other scene objects
+     * in the path of reflectance
+     * 
+     */
+    private Color colorFromAnyObjectHit(Ray ray, int numBouncesLeft) {
+        return scene.getObjects()
+             .stream()
+             .map(
+                 obj -> 
+                     obj.getT(ray)
+                     .map( t -> new RayCastHit(
+                         t,
+                         obj,
+                         obj.surfaceNormal(ray.at(t)))
+                     )
+                 )
+             .filter(Optional::isPresent)
+             .map(Optional::get)
+             .min((h0, h1) -> (int) Float.compare(h0.getT(), h1.getT()))
+             .map( hit -> {
+                Vector3 point = ray.at(hit.getT());
+                Vector3 view = ray.getDirection().inverted().normalized();
+
+                Color finalPixelColor = phongLightingAtPoint(ray, hit).clamped();
+                
+                //Calculate color contributions from reflection if we're still recursing
+                if (numBouncesLeft > 0) {
+                    //Get reflectance vector
+                    Vector3 normal = hit.getNormal();
+                    Vector3 reflectance = normal
+                                            .times(normal.dot(view))
+                                            .times(2)
+                                            .minus(view);
+
+                    //Recurse to get reflection
+                    Ray reflection = new Ray(point, reflectance);    
+
+                    Color reflectedColor = colorFromAnyObjectHit(reflection, numBouncesLeft - 1);
+
+                    //Add reflection color to color for the pixel based on direct & ambient lighting
+                    finalPixelColor = finalPixelColor.plus(
+                                        reflectedColor.times(
+                                        hit
+                                            .getObject()
+                                            .getMaterial()
+                                            .getKReflection()))
+                                        .clamped();
+                }
+
+                return finalPixelColor;
+             })
+             .orElse(Color.BLACK);
+     }
 
     /* Get the color of an individual pixel based on what object
      * is closest to the camera.
      */
-    private Color getColorAtPoint(Ray ray, RayCastHit hit) {
+    private Color phongLightingAtPoint(Ray ray, RayCastHit hit) {
         SceneObject obj = hit.getObject();
         float t = hit.getT();
 

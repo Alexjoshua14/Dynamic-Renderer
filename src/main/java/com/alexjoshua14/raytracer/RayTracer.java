@@ -51,7 +51,7 @@ public class RayTracer {
                             new Material(
                                     new Color(0.1f, 0.2f, 0.1f),
                                     new Color(0.5f, 0.9f, 0.5f),
-                                    new Color(0.7f, 0.7f, 0.7f),
+                                    new Color(0.7f, 0.7f, 0.7f), 
                                     new Color(0.3f, 0.5f, 0.2f),
                                     25
                             )

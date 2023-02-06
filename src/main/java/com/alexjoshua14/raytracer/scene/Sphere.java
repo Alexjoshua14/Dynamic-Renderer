@@ -40,9 +40,9 @@ public class Sphere implements SceneObject {
     public Optional<Float> getT(Ray ray) {
         Vector3 centerPrime = ray.getOrigin().minus(center);
 
-        double a = Math.pow(ray.getDirection().magnitude(), 2);
+        double a = ray.getDirection().dot(ray.getDirection());
         double b = 2 * centerPrime.dot(ray.getDirection());
-        double c = Math.pow(centerPrime.magnitude(), 2) - Math.pow(radius, 2);
+        double c = centerPrime.dot(centerPrime) - radius * radius;
 
         double disc = Math.pow(b, 2) - ( 4 * a * c);
 
@@ -62,14 +62,7 @@ public class Sphere implements SceneObject {
         //  generally meaning a hit behind the camera
         float minT;
 
-        //NOTE: There's a chance we're inside the object which occurs if t1 xor t2 is negative
-        if (t1 > 0 && t2 > 0) {
-            minT = Math.min(t1, t2);
-        } else if (t1 > 0) {
-            minT = t1;
-        } else {
-            minT = t2;
-        }
+        minT = Math.min(t1, t2);
 
         return minT > 0 ?
             Optional.of(minT) :
