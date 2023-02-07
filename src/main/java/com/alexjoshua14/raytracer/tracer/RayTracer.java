@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public class RayTracer {
     private static final int RECURSION_DEPTH = 5;
+    private static final int X_SAMPLE_COUNT = 4;
+    private static final int Y_SAMPLE_COUNT = 4;
     Scene scene;
     int w;
     int h;
@@ -28,12 +30,13 @@ public class RayTracer {
      * 
      * Steps 2 & 3 are completed in colorFromAnyObjectHit
      */
-    public Color tracedValueAtPixel(int x, int y) {
-        float xt = ((float) x) / w;
-        float yt = ((float) y) / h;
-        Ray ray = getIntersectionPoint(xt, yt);
+    public Color tracedValueAtPixel(float x, float y) {
+        // float xt = ((float) x) / w;
+        // float yt = ((float) y) / h;
+        // Ray ray = getIntersectionPoint(xt, yt);
        
-        return colorFromAnyObjectHit(ray, RECURSION_DEPTH);
+        return supersamplingAntialiasing(x, y, X_SAMPLE_COUNT, Y_SAMPLE_COUNT);
+        //return colorFromAnyObjectHit(ray, RECURSION_DEPTH);
         // return recursiveTracedValueAtPixel(ray, RECURSION_DEPTH);
     }
 
@@ -165,5 +168,28 @@ public class RayTracer {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .anyMatch(t -> t <= 1);
+    }
+
+    private Color supersamplingAntialiasing(float x, float y, int xSampleCount, int ySampleCount) {
+
+        Color averagedColor = Color.BLACK;
+        float xt = x / w;
+        float yt = y / h;
+        float dx = (1f / (w * xSampleCount));
+        float dy = ( 1f / (h * ySampleCount));
+
+        for ( float i = 0; i < xSampleCount; i++) {
+            for ( float j = 0; j < ySampleCount; j++) {
+                
+                Ray ray = getIntersectionPoint(
+                                            xt + (dx * i), 
+                                            yt + (dy * j));
+            
+                averagedColor = averagedColor.plus(colorFromAnyObjectHit(ray, RECURSION_DEPTH));
+            }
+        }
+
+        return averagedColor.divide((xSampleCount * ySampleCount));
+        
     }
 }

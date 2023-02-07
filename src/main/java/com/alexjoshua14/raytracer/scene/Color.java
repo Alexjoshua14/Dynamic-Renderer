@@ -37,6 +37,13 @@ public class Color {
         return new Color(newR, newG, newB);
     }
 
+    public Color divide(int num) {
+        float newR = r / num;
+        float newG = g / num;
+        float newB = b / num;
+        return new Color(newR, newG, newB);
+    }
+
     public Color times(float num) {
         return new Color(r * num, g * num, b * num);
     }

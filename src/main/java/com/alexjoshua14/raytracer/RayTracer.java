@@ -9,8 +9,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class RayTracer {
-    private static final int W = 1920;
-    private static final int H = 1080;
+    private static final int W = 1920 * 4;
+    private static final int H = 1080 * 4;
 
     private static final Scene SCENE = new Scene(
             new Vector3(0, 0, 2),
