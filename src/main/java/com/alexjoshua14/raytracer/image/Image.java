@@ -28,6 +28,10 @@ public class Image implements Closeable {
         graphics.fillRect(x, y, 1, 1);
     }
 
+    public BufferedImage getImage() {
+        return image;
+    }
+
     public void save(Path file) throws IOException {
         ImageIO.write(image, "PNG", file.toFile());
     }

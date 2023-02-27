@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface SceneObject {
     public Material getMaterial();
-    public Color getColor();
+    public ScenePixelColor getColor();
     public Vector3 getCenter();
     public Vector3 surfaceNormal(Vector3 point);
 

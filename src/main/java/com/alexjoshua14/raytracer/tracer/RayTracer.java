@@ -1,19 +1,19 @@
 package com.alexjoshua14.raytracer.tracer;
 
-import com.alexjoshua14.raytracer.image.*;
+//import com.alexjoshua14.raytracer.image.*;
 import com.alexjoshua14.raytracer.scene.*;
 import java.lang.Math;
 import java.util.Optional;
 
 public class RayTracer {
-    private static final int RECURSION_DEPTH = 5;
-    private static final int X_SAMPLE_COUNT = 4;
-    private static final int Y_SAMPLE_COUNT = 4;
-    Scene scene;
+    private static final int RECURSION_DEPTH = 3;
+    private static final int X_SAMPLE_COUNT = 2;
+    private static final int Y_SAMPLE_COUNT = 2;
+    SceneProperties scene;
     int w;
     int h;
 
-    public RayTracer(Scene scene, int w, int h) {
+    public RayTracer(SceneProperties scene, int w, int h) {
         this.scene = scene;
         this.w = w;
         this.h = h;
@@ -30,7 +30,7 @@ public class RayTracer {
      * 
      * Steps 2 & 3 are completed in colorFromAnyObjectHit
      */
-    public Color tracedValueAtPixel(float x, float y) {
+    public ScenePixelColor tracedValueAtPixel(float x, float y) {
         // float xt = ((float) x) / w;
         // float yt = ((float) y) / h;
         // Ray ray = getIntersectionPoint(xt, yt);
@@ -58,7 +58,7 @@ public class RayTracer {
      * in the path of reflectance
      * 
      */
-    private Color colorFromAnyObjectHit(Ray ray, int numBouncesLeft) {
+    private ScenePixelColor colorFromAnyObjectHit(Ray ray, int numBouncesLeft) {
         return scene.getObjects()
              .stream()
              .map(
@@ -77,7 +77,7 @@ public class RayTracer {
                 Vector3 point = ray.at(hit.getT());
                 Vector3 view = ray.getDirection().inverted().normalized();
 
-                Color finalPixelColor = phongLightingAtPoint(ray, hit).clamped();
+                ScenePixelColor finalPixelColor = phongLightingAtPoint(ray, hit).clamped();
                 
                 //Calculate color contributions from reflection if we're still recursing
                 if (numBouncesLeft > 0) {
@@ -91,7 +91,7 @@ public class RayTracer {
                     //Recurse to get reflection
                     Ray reflection = new Ray(point, reflectance);    
 
-                    Color reflectedColor = colorFromAnyObjectHit(reflection, numBouncesLeft - 1);
+                    ScenePixelColor reflectedColor = colorFromAnyObjectHit(reflection, numBouncesLeft - 1);
 
                     //Add reflection color to color for the pixel based on direct & ambient lighting
                     finalPixelColor = finalPixelColor.plus(
@@ -105,21 +105,21 @@ public class RayTracer {
 
                 return finalPixelColor;
              })
-             .orElse(Color.BLACK);
+             .orElse(ScenePixelColor.BLACK);
      }
 
     /* Get the color of an individual pixel based on what object
      * is closest to the camera.
      */
-    private Color phongLightingAtPoint(Ray ray, RayCastHit hit) {
+    private ScenePixelColor phongLightingAtPoint(Ray ray, RayCastHit hit) {
         SceneObject obj = hit.getObject();
         float t = hit.getT();
 
         Vector3 sNormal = obj.surfaceNormal(ray.at(t));
         Material m = obj.getMaterial();
-        Color phongIllumination = m.getKAmbient().times(scene.getAmbientLight());
+        ScenePixelColor phongIllumination = m.getKAmbient().times(scene.getAmbientLight());
         
-        Color lightContributions = scene
+        ScenePixelColor lightContributions = scene
             .getLights()
             .stream()
             .filter(light -> 
@@ -131,11 +131,11 @@ public class RayTracer {
                 Vector3 r = sNormal.times(sNormal.dot(l) * 2).minus(l);
                 Vector3 view = ray.getDirection().inverted().normalized();
 
-                Color diffuse = light.getIntensityDiffuse()
+                ScenePixelColor diffuse = light.getIntensityDiffuse()
                                 .times(m.getKDiffuse())
                                 .times(l.dot(sNormal));
 
-                Color specular = m.getKSpecular()
+                ScenePixelColor specular = m.getKSpecular()
                                 .times(light.getIntensitySpecular())
                                 .times((float) Math.pow(
                                     view.dot(r), m.getAlpha()));
@@ -143,10 +143,10 @@ public class RayTracer {
                 return diffuse.plus(specular);
             })
             .reduce(
-                Color.BLACK, (prev, additionalLight) -> prev.plus(additionalLight)
+                ScenePixelColor.BLACK, (prev, additionalLight) -> prev.plus(additionalLight)
             );
             
-        Color ambient = m.getKAmbient().times(scene.getAmbientLight());
+        ScenePixelColor ambient = m.getKAmbient().times(scene.getAmbientLight());
 
         return ambient.plus(lightContributions);
     }
@@ -170,9 +170,9 @@ public class RayTracer {
             .anyMatch(t -> t <= 1);
     }
 
-    private Color supersamplingAntialiasing(float x, float y, int xSampleCount, int ySampleCount) {
+    private ScenePixelColor supersamplingAntialiasing(float x, float y, int xSampleCount, int ySampleCount) {
 
-        Color averagedColor = Color.BLACK;
+        ScenePixelColor averagedColor = ScenePixelColor.BLACK;
         float xt = x / w;
         float yt = y / h;
         float dx = (1f / (w * xSampleCount));

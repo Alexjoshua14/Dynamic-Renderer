@@ -4,13 +4,13 @@ import lombok.Value;
 
 @Value
 public class Material {
-    private Color kAmbient;
-    private Color kDiffuse; 
-    private Color kSpecular;
-    private Color kReflection;
+    private ScenePixelColor kAmbient;
+    private ScenePixelColor kDiffuse; 
+    private ScenePixelColor kSpecular;
+    private ScenePixelColor kReflection;
     private int alpha;
 
-    public Material(Color kAmbient, Color kDiffuse, Color kSpecular, Color kReflection, int alpha)  {
+    public Material(ScenePixelColor kAmbient, ScenePixelColor kDiffuse, ScenePixelColor kSpecular, ScenePixelColor kReflection, int alpha)  {
         this.kAmbient = kAmbient;
         this.kDiffuse = kDiffuse;
         this.kSpecular = kSpecular;
@@ -18,19 +18,19 @@ public class Material {
         this.alpha = alpha;
     }
 
-    public Color getKAmbient() {
+    public ScenePixelColor getKAmbient() {
         return this.kAmbient;   
     }
 
-    public Color getKDiffuse() {
+    public ScenePixelColor getKDiffuse() {
         return this.kDiffuse;   
     }
 
-    public Color getKSpecular() {
+    public ScenePixelColor getKSpecular() {
         return this.kSpecular;   
     }
 
-    public Color getKReflection() {
+    public ScenePixelColor getKReflection() {
         return this.kReflection;   
     }
 

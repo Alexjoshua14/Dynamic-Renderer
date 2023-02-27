@@ -5,10 +5,10 @@ import lombok.Value;
 @Value
 public class Light {
     private Vector3 position;
-    private Color intensitySpecular;
-    private Color intensityDiffuse;
+    private ScenePixelColor intensitySpecular;
+    private ScenePixelColor intensityDiffuse;
 
-    public Light(Vector3 position, Color intensitySpecular, Color intensityDiffuse) {
+    public Light(Vector3 position, ScenePixelColor intensitySpecular, ScenePixelColor intensityDiffuse) {
         this.position = position;
         this.intensitySpecular = intensitySpecular;
         this.intensityDiffuse = intensityDiffuse;
@@ -18,11 +18,11 @@ public class Light {
         return this.position;
     }
 
-    public Color getIntensitySpecular() {
+    public ScenePixelColor getIntensitySpecular() {
         return this.intensitySpecular;   
     }
 
-    public Color getIntensityDiffuse() {
+    public ScenePixelColor getIntensityDiffuse() {
         return this.intensityDiffuse;   
     }
 

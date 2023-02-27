@@ -29,7 +29,7 @@ public class Sphere implements SceneObject {
         return this.material;
     }
 
-    public Color getColor() {
+    public ScenePixelColor getColor() {
         return this.material.getKAmbient();
     }
 
