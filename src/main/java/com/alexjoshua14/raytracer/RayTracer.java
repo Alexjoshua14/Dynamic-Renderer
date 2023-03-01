@@ -6,21 +6,24 @@ import com.alexjoshua14.raytracer.scene.*;
 
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import java.awt.Color;
+import javafx.scene.text.*;
+// import java.awt.Color;
 import javafx.stage.Stage;
-//import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.nio.IntBuffer;
+// import java.io.IOException;
+// import java.nio.file.Paths;
+// import java.nio.IntBuffer;
 import java.util.Arrays;
 
 public class RayTracer extends Application {
-    private static final int W = 1920;
-    private static final int H = 1080;
+    private static final int W = 960;//1920;
+    private static final int H = 540;//1080;
 
     private static final SceneProperties SCENE = new SceneProperties(
             new Vector3(0, 0, 2),
@@ -124,39 +127,35 @@ public class RayTracer extends Application {
             )
     );
 
-    @Override
-    public void start(Stage primaryStage) {
+    private Scene getNextScene() {
+        com.alexjoshua14.raytracer.image.Image bufferedImage = new Image(W, H);
         com.alexjoshua14.raytracer.tracer.RayTracer tracer =
-                new com.alexjoshua14.raytracer.tracer.RayTracer(SCENE, W, H);
-
-        try (com.alexjoshua14.raytracer.image.Image bufferedImage = new Image(W, H)) {
-                for (int x = 0; x < W; x++) {
-                        for (int y = 0; y < H; y++) {
-                                ScenePixelColor scenePixelColor = tracer.tracedValueAtPixel(x, y);
-                                bufferedImage.plotPixel(x, y, colorToImageColor(scenePixelColor));
-                        }
+        new com.alexjoshua14.raytracer.tracer.RayTracer(SCENE, W, H);
+        for (int x = 0; x < W; x++) {
+                for (int y = 0; y < H; y++) {
+                        ScenePixelColor scenePixelColor = tracer.tracedValueAtPixel(x, y);
+                        bufferedImage.plotPixel(x, y, colorToImageColor(scenePixelColor));
                 }
-
-                javafx.scene.image.Image imageToDisplay = SwingFXUtils.toFXImage(bufferedImage.getImage(), null);
-                ImageView imageView = new ImageView(imageToDisplay);
-                StackPane root = new StackPane();
-                root.getChildren().add(imageView);
-
-                Scene s = new Scene(root, W, H);
-                primaryStage.setScene(s);
-                primaryStage.show();
-
-        } catch (Exception e) {
-                System.out.println(e);
         }
+
+        javafx.scene.image.Image imageToDisplay = SwingFXUtils.toFXImage(bufferedImage.getImage(), null);
+        ImageView imageView = new ImageView(imageToDisplay);
+        StackPane root = new StackPane();
+        root.getChildren().add(imageView);
+        
+        Scene s = new Scene(root, W, H);
+
+        return s;
     }
 
-    public static void main(String [] args) throws IOException {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.show();
+        primaryStage.setScene(getNextScene());
+    }
 
-        launch(args);       
-
-        //image.save(Paths.get(args[0]));
-        //}
+    public static void main(String[] args) {
+        launch(args);
     }
 
     private static ImageColor colorToImageColor(ScenePixelColor scenePixelColor) {
