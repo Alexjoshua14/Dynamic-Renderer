@@ -24,11 +24,12 @@ import java.io.IOException;
 // import java.nio.file.Paths;
 // import java.nio.IntBuffer;
 import java.util.Arrays;
+import java.util.Vector;
 
 public class RayTracer extends Application {
     private static final int W = 480;//1920;
     private static final int H = 270;//1080;
-    private static final int REFRESH_RATE = 200;
+    private static final int REFRESH_RATE = 50;
 
     private static final SceneProperties SCENE = new SceneProperties(
             new Vector3(0, 0, 2),
@@ -179,21 +180,31 @@ public class RayTracer extends Application {
         com.alexjoshua14.raytracer.tracer.RayTracer tracer =
         new com.alexjoshua14.raytracer.tracer.RayTracer(SCENE, W, H);
 
+        Vector<Scene> nextScenes = new Vector<Scene>();
+        Vector<Scene> previousScenes = new Vector<Scene>();
+
         primaryStage.show();
         Scene intialScene = renderCurrentScene(tracer);
         primaryStage.setScene(intialScene);
 
+        //Let's preload a few scenes
+        for (int i = 0; i < 100; i++) {
+                nextScenes.add(getNextScene(tracer));
+        }
+
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(REFRESH_RATE), event -> {
-                Scene nextScene = getNextScene(tracer);
-                if (nextScene != null) primaryStage.setScene(nextScene);
+                //nextScenes.add(getNextScene(tracer));
+                if (nextScenes.size() == 0) {
+                        nextScenes.addAll(previousScenes);
+                        previousScenes.clear();
+                        
+                } 
+                Scene nextScene = nextScenes.remove(0);
+                previousScenes.add(nextScene);
+                primaryStage.setScene(nextScene);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-                
-                // updateScene(tracer, 1);
-                // Thread.sleep(3000);
-                //break;
-        //}
     }
 
     public static void main(String[] args) {
