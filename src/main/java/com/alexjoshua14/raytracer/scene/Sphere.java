@@ -5,20 +5,37 @@ import java.util.Optional;
 import java.lang.Math;
 import lombok.Value;
 
-@Value
+//@Value
 public class Sphere implements SceneObject {
     private Vector3 center;
     private float radius;
     private Material material;
+    private Vector3 velocity;
 
-    public Sphere(Vector3 center, float radius, Material material) {
+    public Sphere(Vector3 center, float radius, Material material, Vector3 velocity) {
         this.center = center;
         this.radius = radius;
         this.material = material;
+        this.velocity = velocity;
     }
 
     public Vector3 getCenter() {
         return this.center;
+    }
+
+    public Vector3 getVelocity() {
+        return this.velocity;
+    }
+
+    /**
+     * Updates the center of the given object
+     * 
+     * @return Vector3 - indicating the distance travelled
+     */
+    public Vector3 updateCenter(Vector3 newCenter) {
+        Vector3 distance = center.minus(newCenter);
+        this.center = newCenter;
+        return distance;
     }
 
     public float getRadius() {
@@ -68,4 +85,6 @@ public class Sphere implements SceneObject {
             Optional.of(minT) :
             Optional.empty();
     }
+
+    
 }

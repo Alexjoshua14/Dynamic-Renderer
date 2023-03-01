@@ -6,7 +6,7 @@ import java.lang.Math;
 import java.util.Optional;
 
 public class RayTracer {
-    private static final int RECURSION_DEPTH = 3;
+    private static final int RECURSION_DEPTH = 2;
     private static final int X_SAMPLE_COUNT = 2;
     private static final int Y_SAMPLE_COUNT = 2;
     SceneProperties scene;
@@ -190,6 +190,25 @@ public class RayTracer {
         }
 
         return averagedColor.divide((xSampleCount * ySampleCount));
-        
+    }
+
+    /**
+     * Update the objects within the scene to represent the current state after 
+     * a provided amount of time.
+     * 
+     * @param timejump - number of milliseconds to progress the scene by
+     */
+    public void move(long timejump) {
+        scene.getObjects()
+            .stream()
+            .forEach(obj -> moveObject(obj, timejump));
+    }
+
+    public Vector3 moveObject(SceneObject obj, long timejump) {
+        Vector3 v = obj.getVelocity();
+        Vector3 newCenter = obj.getCenter();
+
+        v = v.times(timejump);
+        return obj.updateCenter(newCenter.plus(v));
     }
 }

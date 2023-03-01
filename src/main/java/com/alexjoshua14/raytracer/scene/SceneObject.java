@@ -7,6 +7,8 @@ public interface SceneObject {
     public Material getMaterial();
     public ScenePixelColor getColor();
     public Vector3 getCenter();
+    public Vector3 getVelocity(); //Units per millisecond
+    public Vector3 updateCenter(Vector3 newCenter);
     public Vector3 surfaceNormal(Vector3 point);
 
     /* Returns the closest point of intersection based on the path
