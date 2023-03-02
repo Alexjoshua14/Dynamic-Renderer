@@ -5,12 +5,24 @@ This repository's foundation is from an implementation of the projects outlined 
 
 After completing the tutorial, I idependently expanded the functionality of the 3D renderer with the first goal being a to have a constantly refreshing scene in which the scene objects gain the ability of movement and collision.
 
+Quick Start for most recent version
+-----------
+```sh
+git clone https://github.com/alexjoshua14/Dynamic-Renderer.git
+cd Dynamic-Renderer
+
+# Build and run the raytracer
+gradle run
+```
+
+
 Quick Start for v1.0 tag
 -----------
 
 ```sh
-git clone https://github.com/avik-das/build-your-own-raytracer-java.git
-cd build-your-own-raytracer-java
+git clone https://github.com/alexjoshua14/Dynamic-Renderer.git
+cd Dynamic-Renderer
+git checkout v1.0
 
 # Build the raytracer
 gradle build
