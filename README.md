@@ -3,7 +3,7 @@
 
 This repository's foundation is from an implementation of the projects outlined in [the Build your own 3D renderer workshop](https://avik-das.github.io/build-your-own-raytracer/). The implementation is in Java, outputting to a .png file. The foundation can be found in the v1.0 tag in which a complete implementation of the projects from avikdas's tutorial is located.
 
-After completing the tutorial, I idependently expanded the functionality of the 3D renderer with the first goal being a to have a constantly refreshing scene in which the scene objects gain the ability of movement and collision.
+Since completing the tutorial, I've been idependently working on expanding the functionality of the 3D renderer with the first goal being a to have a constantly refreshing scene in which the scene objects gain the ability of movement and collision.
 
 Quick Start for most recent version
 -----------
